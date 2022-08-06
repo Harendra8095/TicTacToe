@@ -14,7 +14,7 @@ width = 400
 height = 400
 white = (255, 255, 255)
 line_color = (10, 10, 10)
-TTT = [[None]*3, [None]*3, [None]*3]    #Board
+TTT = [[None]*4, [None]*4, [None]*4, [None]*4]    #Board
 
 
 # Initializing game window
@@ -42,11 +42,13 @@ def game_opening():
     screen.fill(white)
 
     #Drawing vertical line
-    pg.draw.line(screen, line_color, (width/3, 0), (width/3, height), 7)
-    pg.draw.line(screen, line_color, (width/3*2, 0), (width/3*2, height), 7)
+    pg.draw.line(screen, line_color, (width/4, 0), (width/4, height), 7)
+    pg.draw.line(screen, line_color, (width/4*2, 0), (width/4*2, height), 7)
+    pg.draw.line(screen, line_color, (width/4*3, 0), (width/4*3, height), 7)
     #Drawing horizontal line
-    pg.draw.line(screen, line_color, (0, height/3), (width, height/3), 7)
-    pg.draw.line(screen, line_color, (0, height/3*2), (width, height/3*2), 7)
+    pg.draw.line(screen, line_color, (0, height/4), (width, height/4), 7)
+    pg.draw.line(screen, line_color, (0, height/4*2), (width, height/4*2), 7)
+    pg.draw.line(screen, line_color, (0, height/4*3), (width, height/4*3), 7)
     draw_status()
 
 
@@ -79,28 +81,28 @@ def draw_status():
 def check_win():
     global TTT, winner, draw, tie, win, lose
 
-    for i in range(0,3):
+    for i in range(0,4):
         # Check for winning rows
-        if ((TTT[i][0]==TTT[i][1]==TTT[i][2]) and (TTT[i][0] is not None)):
+        if ((TTT[i][0]==TTT[i][1]==TTT[i][2]==TTT[i][3]) and (TTT[i][0] is not None)):
             winner = TTT[i][0]
             if winner:
                 lose += 1
             else:
                 win += 1
-            pg.draw.line(screen, (250,0,0), (0, (i+1)*height/3-height/6), (width,(i+1)*height/3-height/6),4)
+            pg.draw.line(screen, (250,0,0), (0, (i+1)*height/4-height/8), (width,(i+1)*height/4-height/8),4)
             break
         # Check for winning columns
-        if ((TTT[0][i]==TTT[1][i]==TTT[2][i]) and (TTT[0][i] is not None)):
+        if ((TTT[0][i]==TTT[1][i]==TTT[2][i]==TTT[3][i]) and (TTT[0][i] is not None)):
             winner = TTT[0][i]
             if winner:
                 lose += 1
             else:
                 win += 1
-            pg.draw.line(screen, (250,0,0), ((i+1)*width/3-width/6, 0), ((i+1)*width/3-width/6, height),4)
+            pg.draw.line(screen, (250,0,0), ((i+1)*width/4-width/8, 0), ((i+1)*width/4-width/8, height),4)
             break
 
     # Check for diagonal winners
-    if (TTT[0][0]==TTT[1][1]==TTT[2][2]) and (TTT[1][1] is not None):
+    if (TTT[0][0]==TTT[1][1]==TTT[2][2]==TTT[3][3]) and (TTT[1][1] is not None):
         winner =  TTT[1][1]
         if winner:
             lose += 1
@@ -108,8 +110,8 @@ def check_win():
             win += 1
         pg.draw.line(screen, (250,70,70), (50,50), (350,350), 4)
     
-    if (TTT[0][2]==TTT[1][1]==TTT[2][0]) and (TTT[1][1] is not None):
-        winner =  TTT[1][1]
+    if (TTT[0][3]==TTT[1][2]==TTT[2][1]==TTT[3][0]) and (TTT[1][2] is not None):
+        winner =  TTT[1][2]
         if winner:
             lose += 1
         else:
@@ -125,18 +127,22 @@ def check_win():
 def drawXO(row, col):
     global TTT, XO
     if row==0:
-        posx = 30
+        posx = 10
     if row==1:
-        posx = width/3 + 30
+        posx = width/4 + 10
     if row==2:
-        posx = width/3*2 + 30
+        posx = width/4*2 + 10
+    if row==3:
+        posx = width/4*3 + 10
     
     if col==0:
-        posy = 30
+        posy = 10
     if col==1:
-        posy = height/3 + 30
+        posy = height/4 + 10
     if col==2:
-        posy = height/3*2 + 30
+        posy = height/4*2 + 10
+    if col==3:
+        posy = height/4*3 + 10
 
     TTT[row][col] = XO
     if not XO:
@@ -157,22 +163,26 @@ def user_click():
     x,y = pg.mouse.get_pos()
 
     #get column of mouse click (1-3)
-    if(x<width/3):
+    if(x<width/4):
         col=0
-    elif(x<width/3*2):
+    elif(x<width/4*2):
         col=1
-    elif(x<width):
+    elif(x<width/4*3):
         col=2
+    elif(x<width):
+        col=3
     else:
         return
 
     #get row of mouse click (1-3)
-    if(y<height/3):
+    if(y<height/4):
         row=0
-    elif(y<height/3*2):
+    elif(y<height/4*2):
         row=1
-    elif(y<height):
+    elif(y<height/4*3):
         row=2
+    elif(y<height):
+        row=3
     else:
         return
 
@@ -187,7 +197,7 @@ def reset_game():
     XO = False
     draw = False
     winner = None
-    TTT = [[None]*3, [None]*3, [None]*3]
+    TTT = [[None]*4, [None]*4, [None]*4, [None]*4]
     game_opening()
 
 

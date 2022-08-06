@@ -14,6 +14,8 @@ def com(TTT, XO, depth, alpha, beta):
 
     moves = possible_actions(TTT)
     take = moves[0]
+    if depth>6:
+        return v+depth, take
     for move in moves:
         temp_v, temp = com(apply_action(TTT, move, XO), turn, depth+1, alpha, beta)
         
@@ -32,15 +34,17 @@ def com(TTT, XO, depth, alpha, beta):
 
 
 def terminal_state(TTT):
-    for i in range(0,3):
+    for i in range(0,4):
         # Check for winning rows
-        if ((TTT[i][0] is not None) and (TTT[i][0]==TTT[i][1]==TTT[i][2])):
+        if ((TTT[i][0] is not None) and (TTT[i][0]==TTT[i][1]==TTT[i][2]==TTT[i][3])):
             return True, LOWEST if TTT[i][0] else HIGHEST
         # Check for winning columns
-        if ((TTT[0][i] is not None) and (TTT[0][i]==TTT[1][i]==TTT[2][i])):
+        if ((TTT[0][i] is not None) and (TTT[0][i]==TTT[1][i]==TTT[2][i]==TTT[3][i])):
             return True, LOWEST if TTT[0][i] else HIGHEST
     
-    if ((TTT[1][1] is not None) and ((TTT[0][0]==TTT[1][1]==TTT[2][2]) or (TTT[0][2]==TTT[1][1]==TTT[2][0]))):
+    if (TTT[1][1] is not None and (TTT[0][0]==TTT[1][1]==TTT[2][2]==TTT[3][3])):
+        return True, LOWEST if TTT[1][1] else HIGHEST
+    if (TTT[1][2] is not None and (TTT[0][3]==TTT[1][2]==TTT[2][1]==TTT[3][0])):
         return True, LOWEST if TTT[1][1] else HIGHEST
     
     if not any(None in row for row in TTT):
@@ -51,8 +55,8 @@ def terminal_state(TTT):
 
 def possible_actions(TTT):
     moves = []
-    for row in range(0,3):
-        for col in range(0,3):
+    for row in range(0,4):
+        for col in range(0,4):
             if TTT[row][col]==None:
                 moves.append([row, col])
     return moves
